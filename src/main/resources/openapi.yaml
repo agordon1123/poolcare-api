@@ -1,0 +1,63 @@
+openapi: 3.0.0
+
+info:
+  title: PoolCare API
+  description: PoolCare is a SaaS offering for swimming pool service companies. This api .
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+  basePath:
+    /api/v1
+
+paths:
+  /getCustomersByCompanyName:
+#  /getCustomersByBusinessName:
+    get:
+      description: For testing purposes
+      parameters:
+        - name: companyName
+          in: query
+          description: The name of the company/business
+          example: 123
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type:
+                    array
+                items:
+                    $ref: "#/components/schemas/CustomerResponse"
+        500:
+          description: Internal Server Error
+          content:
+            "application/problem+json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas: # Object definition
+    CustomerResponse:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+            type: string
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "There was an error processing your request"
+        code:
+            type:
+                integer
+            format:
+                int32
+            example:
+                500
