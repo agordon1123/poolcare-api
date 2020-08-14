@@ -20,13 +20,21 @@
 
 	<dependencies>
 		<dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
+		</dependency>
+		
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jdbc</artifactId>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -37,11 +45,13 @@
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -53,6 +63,12 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
+		<dependency>
+            <groupId>io.swagger.codegen.v3</groupId>
+            <artifactId>swagger-codegen-maven-plugin</artifactId>
+            <version>3.0.21</version>
+        </dependency>
 	</dependencies>
 
 	<build>
@@ -61,7 +77,102 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			
+			<!-- Removes the previously generated files before being rebuilt -->
+			<plugin>
+				<artifactId>maven-clean-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+						<configuration>
+							<filesets>
+								<fileset>
+									<directory>src/main/gen</directory>
+								</fileset>
+							</filesets>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+                <groupId>io.swagger.codegen.v3</groupId>
+                <artifactId>swagger-codegen-maven-plugin</artifactId>
+                <version>3.0.21</version>
+                <executions>
+                    <!-- Generates the files needed for the Swagger API browser ? -->
+                    <!-- <execution>
+                        <id>json-generation</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>src/main/resources/openapi.yaml</inputSpec>
+                            <language>openapi</language>
+                            <output>src/main/resources/swagger-ui</output>
+                            <configOptions>
+                                <outputFile>openapi.json</outputFile>
+                            </configOptions>
+                        </configuration>
+                    </execution> -->
+
+                    <!-- Generates the API code -->
+                    <execution>
+                        <id>generate-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>src/main/resources/openapi.yaml</inputSpec>
+                            <output>src/main/gen</output>
+                            <language>spring</language>
+                            <library>spring-boot</library>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <configOptions>
+                                <sourceFolder>java</sourceFolder>
+                                <java8>true</java8>
+                                <interfaceOnly>true</interfaceOnly>                           
+                                <dateLibrary>java11</dateLibrary>
+                                <hideGenerationTimestamp>false</hideGenerationTimestamp>
+                                <modelPackage>com.poolcare.poolcareapi.model</modelPackage>
+                                <apiPackage>com.poolcare.poolcareapi.api</apiPackage>
+                                <invokerPackage>com.poolcare.poolcareapi</invokerPackage>
+                            </configOptions>
+                            <configHelp>false</configHelp>
+                        </configuration>
+                    </execution>
+
+                    <!-- Unsure if needed -->
+                    <!-- <execution>
+                        <id>generate-documentation</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                             <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                             <inputSpec>src/main/resources/openapi.yaml</inputSpec>
+                             <output>src/main/gen/generated-sources/swagger</output>
+                             <modelPackage>com.example.demo.model</modelPackage>
+                             <apiPackage>com.example.demo.api</apiPackage>
+                             <invokerPackage>com.example.demo</invokerPackage>
+                             <templateDirectory>src/main/resources/templates</templateDirectory>
+                             <language>html</language>
+                             <configOptions>
+                                 <java8>true</java8>
+                                 <dateLibrary>java8</dateLibrary>
+                                 <performBeanValidation>false</performBeanValidation>
+                                 <useBeanValidation>false</useBeanValidation>
+                                 <delegatePattern>false</delegatePattern>
+                                 <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                             </configOptions>
+                        </configuration>
+                    </execution> -->
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
-
 </project>
