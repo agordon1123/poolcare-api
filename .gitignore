@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Swagger CodeGen Files ###
+src/main/gen/*
+
+### Adding to gitignore for now  ###
+.mvn/*
+mvnw
+mvnw.cmd
