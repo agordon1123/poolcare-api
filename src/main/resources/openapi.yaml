@@ -1,20 +1,23 @@
-openapi: 3.0.0
-
+openapi: 3.0.1
 info:
   title: PoolCare API
   description: PoolCare is a SaaS offering for swimming pool service companies. This api .
   version: 1.0.0
-
-servers:
-  url: http://localhost:8080
-  basePath:
-    /api/v1
-
+  contact:
+    name: Alex Gordon
+    url: https://alexrgordon.com
+    email: argordon.dev@gmail.com
+# base path is not currently recognized from openapi spec
+# servers:
+#   - url: http://localhost:8080/api/v1
+#     description: The poolcare API server
 paths:
-  /getCustomersByCompanyName:
-#  /getCustomersByBusinessName:
+  '/getCustomersByCompanyName':
     get:
-      description: For testing purposes
+      tags:
+        - Poolcare
+      description: Returns all of the customers that belong to an organization
+      operationId: getCustomersByCompanyName
       parameters:
         - name: companyName
           in: query
@@ -29,10 +32,35 @@ paths:
           content:
             application/json:
               schema:
-                type:
-                    array
+                type: array
                 items:
-                    $ref: "#/components/schemas/CustomerResponse"
+                  $ref: "#/components/schemas/CustomerResponse"
+        500:
+          description: Internal Server Error
+          content:
+            "application/problem+json":
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"  
+  '/addCustomer':
+    post:
+      tags:
+        - Poolcare
+      description: Adds a customer to the specified companies database
+      operationId: addCustomer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddCustomerRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#/components/schemas/AddCustomerResponse"
         500:
           description: Internal Server Error
           content:
@@ -46,8 +74,29 @@ components:
       properties:
         firstName:
           type: string
+          example: Dave
         lastName:
-            type: string
+          type: string
+          example: Matthews
+    AddCustomerRequest:
+      type: object
+      properties:
+        companyName:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+    AddCustomerResponse:
+      type: object
+      properties:
+        id: 
+          type: number
+          format: int32
+        firstName:
+          type: string
+        lastName:
+          type: string
     ErrorResponse:
       type: object
       properties:
@@ -55,9 +104,6 @@ components:
           type: string
           example: "There was an error processing your request"
         code:
-            type:
-                integer
-            format:
-                int32
-            example:
-                500
+          type: number
+          format: int32
+          example: 500
