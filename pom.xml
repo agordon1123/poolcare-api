@@ -76,6 +76,13 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+                    <execution>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                    </execution>
+                </executions>
 			</plugin>
 			
 			<!-- Removes the previously generated files before being rebuilt -->
@@ -103,8 +110,8 @@
                 <artifactId>swagger-codegen-maven-plugin</artifactId>
                 <version>3.0.21</version>
                 <executions>
-                    <!-- Generates the files needed for the Swagger API browser ? -->
-                    <!-- <execution>
+                    <!-- Generates a JSON version of the API available at /openapi.json -->
+                    <execution>
                         <id>json-generation</id>
                         <goals>
                             <goal>generate</goal>
@@ -117,9 +124,9 @@
                                 <outputFile>openapi.json</outputFile>
                             </configOptions>
                         </configuration>
-                    </execution> -->
+                    </execution>
 
-                    <!-- Generates the API code -->
+                    <!-- Generates the API and models -->
                     <execution>
                         <id>generate-sources</id>
                         <phase>generate-sources</phase>
@@ -132,15 +139,16 @@
                             <language>spring</language>
                             <library>spring-boot</library>
                             <generateSupportingFiles>false</generateSupportingFiles>
+							<modelPackage>com.poolcare.poolcareapi.model</modelPackage>
+							<apiPackage>com.poolcare.poolcareapi.api</apiPackage>
+							<invokerPackage>com.poolcare.poolcareapi</invokerPackage>
                             <configOptions>
                                 <sourceFolder>java</sourceFolder>
                                 <java8>true</java8>
                                 <interfaceOnly>true</interfaceOnly>                           
                                 <dateLibrary>java11</dateLibrary>
-                                <hideGenerationTimestamp>false</hideGenerationTimestamp>
-                                <modelPackage>com.poolcare.poolcareapi.model</modelPackage>
-                                <apiPackage>com.poolcare.poolcareapi.api</apiPackage>
-                                <invokerPackage>com.poolcare.poolcareapi</invokerPackage>
+								<hideGenerationTimestamp>false</hideGenerationTimestamp>
+								<useTags>true</useTags>
                             </configOptions>
                             <configHelp>false</configHelp>
                         </configuration>
@@ -156,9 +164,9 @@
                         <configuration>
                              <inputSpec>src/main/resources/openapi.yaml</inputSpec>
                              <output>src/main/gen/generated-sources/swagger</output>
-                             <modelPackage>com.example.demo.model</modelPackage>
-                             <apiPackage>com.example.demo.api</apiPackage>
-                             <invokerPackage>com.example.demo</invokerPackage>
+                             <modelPackage>com.poolcare.poolcareapi.model</modelPackage>
+                             <apiPackage>com.poolcare.poolcareapi.api</apiPackage>
+                             <invokerPackage>com.poolcare.poolcareapi</invokerPackage>
                              <templateDirectory>src/main/resources/templates</templateDirectory>
                              <language>html</language>
                              <configOptions>
