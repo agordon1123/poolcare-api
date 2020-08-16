@@ -1,0 +1,15 @@
+spring:
+    application:
+        name: poolcare-api
+server:
+    port: 8080
+    servlet:
+        context-path: /api/v1
+logging:
+    level:
+        root: info
+# TODO: not currently recognizing token
+# api:
+#     token:
+#         secret: ${POOLCARE_API_KEY}
+#         enabled: true
