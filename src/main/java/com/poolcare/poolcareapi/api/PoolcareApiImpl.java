@@ -10,8 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 public class PoolcareApiImpl implements PoolcareApi {
     
     // private static final Logger LOG = new LoggerFactory.getLogger(PoolcareApiImpl.class);
@@ -23,7 +25,7 @@ public class PoolcareApiImpl implements PoolcareApi {
     }
     
     @Override
-    public ResponseEntity<List<CustomerResponse>> getCustomersByCompanyName(String companyName) {
+    public ResponseEntity<List<CustomerResponse>> getCustomersByCompanyId(Integer companyId) {
         List<CustomerResponse> result = new ArrayList();
         CustomerResponse customerResponse = new CustomerResponse();
         customerResponse.setFirstName("Alex");
