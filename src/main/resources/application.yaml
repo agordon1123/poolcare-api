@@ -1,6 +1,11 @@
 spring:
     application:
         name: poolcare-api
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: ${DB_URL}
+        username: ${DB_USER}
+        password: ${DB_PASS}
 server:
     port: 8080
     servlet:

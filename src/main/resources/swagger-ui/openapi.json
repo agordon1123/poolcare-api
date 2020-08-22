@@ -14,20 +14,21 @@
     "url" : "/"
   } ],
   "paths" : {
-    "/getCustomersByCompanyName" : {
+    "/getCustomersByCompanyId" : {
       "get" : {
         "tags" : [ "Poolcare" ],
         "description" : "Returns all of the customers that belong to an organization",
-        "operationId" : "getCustomersByCompanyName",
+        "operationId" : "getCustomersByCompanyId",
         "parameters" : [ {
-          "name" : "companyName",
+          "name" : "companyId",
           "in" : "query",
-          "description" : "The name of the company/business",
+          "description" : "The id of the company/business",
           "required" : true,
           "style" : "form",
           "explode" : true,
           "schema" : {
-            "type" : "string"
+            "type" : "integer",
+            "format" : "int32"
           },
           "example" : 123
         } ],
@@ -41,6 +42,16 @@
                   "items" : {
                     "$ref" : "#/components/schemas/CustomerResponse"
                   }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -80,6 +91,71 @@
               "application/json" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/AddCustomerResponse"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/getWorkOrders" : {
+      "get" : {
+        "tags" : [ "Poolcare" ],
+        "description" : "Retreives all of the work orders that exist for a specific company",
+        "operationId" : "getWorkOrders",
+        "parameters" : [ {
+          "name" : "companyId",
+          "in" : "query",
+          "description" : "The id of the company/business",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "example" : 123
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/WorkOrder"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "content" : {
+              "application/problem+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -130,14 +206,37 @@
       "AddCustomerResponse" : {
         "type" : "object",
         "properties" : {
-          "id" : {
-            "type" : "number",
+          "customerId" : {
+            "type" : "integer",
             "format" : "int32"
           },
           "firstName" : {
             "type" : "string"
           },
           "lastName" : {
+            "type" : "string"
+          }
+        }
+      },
+      "WorkOrder" : {
+        "type" : "object",
+        "properties" : {
+          "workOrderId" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "companyId" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "customerId" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "created" : {
+            "type" : "string"
+          },
+          "scheduled" : {
             "type" : "string"
           }
         }
@@ -150,7 +249,7 @@
             "example" : "There was an error processing your request"
           },
           "code" : {
-            "type" : "number",
+            "type" : "integer",
             "format" : "int32",
             "example" : 500
           }
