@@ -1,5 +1,6 @@
 package com.poolcare.poolcareapi.api;
 
+import com.poolcare.poolcareapi.service.PoolCareService;
 import java.util.List;
 import java.util.ArrayList;
 import com.poolcare.poolcareapi.model.*;
@@ -16,23 +17,23 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 @CrossOrigin(origins = "http://localhost:4200")
 public class PoolcareApiImpl implements PoolcareApi {
     
-    // private static final Logger LOG = new LoggerFactory.getLogger(PoolcareApiImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PoolcareApiImpl.class);
     private ObjectMapper objectMapper;
+    private PoolCareService poolcareService;
 
+    // TODO: define a casing for poolcareService || poolCareService
     @Autowired
-    public PoolcareApiImpl(ObjectMapper objectMapper) {
+    public PoolcareApiImpl(ObjectMapper objectMapper, PoolCareService poolCareService) {
         this.objectMapper = objectMapper;
+        this.poolcareService = poolCareService;
     }
     
     @Override
     public ResponseEntity<List<CustomerResponse>> getCustomersByCompanyId(Integer companyId) {
-        List<CustomerResponse> result = new ArrayList();
-        CustomerResponse customerResponse = new CustomerResponse();
-        customerResponse.setFirstName("Alex");
-        customerResponse.setLastName("Gordon");
-        result.add(customerResponse);
+        
+        List<CustomerResponse> response = this.poolcareService.getCustomersByCompanyId(companyId);
         // LOG.info("getCustomersByCompanyName object: {}", customerResponse);
-        return new ResponseEntity<List<CustomerResponse>>(result, HttpStatus.OK);
+        return new ResponseEntity<List<CustomerResponse>>(response, HttpStatus.OK);
     }
 
     @Override
@@ -49,5 +50,15 @@ public class PoolcareApiImpl implements PoolcareApi {
         //     error.setMessage("Improper request body");
         //     return new ResponseEntity<ErrorResponse>(error, HttpStatus.BAD_REQUEST);
         // }
+    }
+
+    @Override
+    public ResponseEntity<List<WorkOrder>> getWorkOrders(Integer companyId) {
+        // TODO: complete exception handler
+        if (companyId <= 0) {
+            LOG.error("Company ID cannot be zero or negative");
+        }
+        List<WorkOrder> workOrders = poolcareService.getWorkOrdersByCompanyId(companyId);
+        return new ResponseEntity<List<WorkOrder>>(workOrders, HttpStatus.OK);
     }
 }
